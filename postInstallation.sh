@@ -11,6 +11,12 @@ if ! ping -c 5 google.com &> /dev/null; then
     exit 1
 fi
 
+sudo pacman-key --init
+sudo pacman-key --populate
+sudo pacman-key --refresh-keys
+sudo pacman -Scc
+sudo pacman -S archlinux-keyring --noconfirm
+
 sudo pacman -S pacman-contrib reflector rsync --noconfirm
 sudo cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
 reflector -a 48 -c $iso -f 5 -l 20 --sort rate --save /etc/pacman.d/mirrorlist
@@ -91,3 +97,4 @@ printf "\n%s - Finish Install base-devel & archlinux-keyring \n"
 # glibc
 # dnsmasq
 # htop
+#hyprland kitty

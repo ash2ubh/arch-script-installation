@@ -191,10 +191,10 @@ EOF
 format_partition(){
     echo "Start formatting partitions..."
 
-    mkfs.fat -F32 "${TARGET_DISK}${BOOT_PART}"
-    mkfs.ext4 "${TARGET_DISK}${ROOT_PART}" 
-    # mkfs.fat -F32 -S 4096 "${TARGET_DISK}${BOOT_PART}"
-    # mkfs.ext4 -b 4096 "${TARGET_DISK}${ROOT_PART}" 
+    # mkfs.fat -F32 "${TARGET_DISK}${BOOT_PART}"
+    # mkfs.ext4 "${TARGET_DISK}${ROOT_PART}" 
+    mkfs.fat -F32 -S 4096 "${TARGET_DISK}${BOOT_PART}"
+    mkfs.ext4 -b 4096 "${TARGET_DISK}${ROOT_PART}" 
 
     mkswap "${TARGET_DISK}${SWAP_PART}"
     swapon "${TARGET_DISK}${SWAP_PART}"
