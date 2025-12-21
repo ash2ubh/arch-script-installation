@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Arch Script Installation</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism-themes/1.9.0/prism-vs.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="script-content"></div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/components/prism-bash.min.js"></script>
+    
+    <script>
+        // Load and display .sh ***REMOVED***le
+        fetch('archInstall.sh')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('script-content').innerHTML = 
+                    `<pre><code class="language-bash">${data***REMOVED***</code></pre>`;
+                Prism.highlightAll(); // Apply syntax highlighting
+            ***REMOVED***)
+            .catch(error => console.error('Error loading ***REMOVED***le:', error));
+    </script>
+</body>
+</html>
