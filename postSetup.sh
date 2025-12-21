@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 
 check_pkg_i(){
-    if pacman -Qi "${1***REMOVED***" &>/dev/null; then
+    if pacman -Qi "${1}" &>/dev/null; then
         return 0
     else 
         return 1
-***REMOVED***
-***REMOVED***
+    fi
+}
 
 check_svc(){
-    if [[ $(systemctl list-units --all -t service --full --no-legend "${1***REMOVED***.service" | sed 's/^\s*//g' | cut -f1 -d' ') == "${1***REMOVED***.service" ]]; then
+    if [[ $(systemctl list-units --all -t service --full --no-legend "${1}.service" | sed 's/^\s*//g' | cut -f1 -d' ') == "${1}.service" ]]; then
         return 0
     else
         return 1
-***REMOVED*** 
-***REMOVED***
+    fi 
+}
 
 svc_lst=(
     NetworkManager
@@ -24,18 +24,18 @@ svc_lst=(
 )
 
 if check_pkg_i "nbfc-linux"; then
-    sudo nbfc con***REMOVED***g --set auto
-***REMOVED***
+    sudo nbfc config --set auto
+fi
 
-for servChk in "${svc_lst[@]***REMOVED***"; do
-    if check_svc ${servChk***REMOVED***; then
-        printf "\n%s - ${servChk***REMOVED*** service system is Already Active \n"
+for servChk in "${svc_lst[@]}"; do
+    if check_svc ${servChk}; then
+        printf "\n%s - ${servChk} service system is Already Active \n"
     else
-        printf "\n%s - Start ${servChk***REMOVED*** service system... \n"
-        sudo systemctl enable "${servChk***REMOVED***.service"
-        sudo systemctl start "${servChk***REMOVED***.service"
-        printf "\n%s - ${servChk***REMOVED*** service system is Active ... \n"
-***REMOVED***
+        printf "\n%s - Start ${servChk} service system... \n"
+        sudo systemctl enable "${servChk}.service"
+        sudo systemctl start "${servChk}.service"
+        printf "\n%s - ${servChk} service system is Active ... \n"
+    fi
 done
 
 #######
@@ -51,28 +51,28 @@ plugin_lst=(
 
 if check_pkg_i "zsh" && check_pkg_i "oh-my-zsh-git"; then
     # set variables
-    Zsh_rc="${ZDOTDIR:-$HOME***REMOVED***/.zshrc"
+    Zsh_rc="${ZDOTDIR:-$HOME}/.zshrc"
     Zsh_Path="/usr/share/oh-my-zsh"
     Zsh_Plugins="$Zsh_Path/custom/plugins"
     Fix_Completion=""
 
     # generate plugins from list
-    for r_plugin in "${plugin_lst[@]***REMOVED***"; do
-        z_plugin=$(echo "${r_plugin***REMOVED***" | awk -F '/' '{print $NF***REMOVED***')
-        if [ "${r_plugin:0:4***REMOVED***" == "http" ] && [ ! -d "${Zsh_Plugins***REMOVED***/${z_plugin***REMOVED***" ]; then
-            sudo git clone "${r_plugin***REMOVED***" "${Zsh_Plugins***REMOVED***/${z_plugin***REMOVED***"
-    ***REMOVED***
-        if [ "${z_plugin***REMOVED***" == "zsh-completions" ] && [ "$(grep 'fpath+=.*plugins/zsh-completions/src' "${Zsh_rc***REMOVED***" | wc -l)" -eq 0 ]; then
-            Fix_Completion='\nfpath+=${ZSH_CUSTOM:-${ZSH:-/usr/share/oh-my-zsh***REMOVED***/custom***REMOVED***/plugins/zsh-completions/src'
-***REMOVED***
-            [ -z "${z_plugin***REMOVED***" ] || w_plugin+=" ${z_plugin***REMOVED***"
-    ***REMOVED***
-***REMOVED***
+    for r_plugin in "${plugin_lst[@]}"; do
+        z_plugin=$(echo "${r_plugin}" | awk -F '/' '{print $NF}')
+        if [ "${r_plugin:0:4}" == "http" ] && [ ! -d "${Zsh_Plugins}/${z_plugin}" ]; then
+            sudo git clone "${r_plugin}" "${Zsh_Plugins}/${z_plugin}"
+        fi
+        if [ "${z_plugin}" == "zsh-completions" ] && [ "$(grep 'fpath+=.*plugins/zsh-completions/src' "${Zsh_rc}" | wc -l)" -eq 0 ]; then
+            Fix_Completion='\nfpath+=${ZSH_CUSTOM:-${ZSH:-/usr/share/oh-my-zsh}/custom}/plugins/zsh-completions/src'
+        else
+            [ -z "${z_plugin}" ] || w_plugin+=" ${z_plugin}"
+        fi
+    done
 
     # update plugin array in zshrc
-    echo -e "\033[0;32m[SHELL]\033[0m installing plugins (${w_plugin***REMOVED*** )"
-    sed -i "/^plugins=/c\plugins=(${w_plugin***REMOVED*** )${Fix_Completion***REMOVED***" "${Zsh_rc***REMOVED***"
-***REMOVED***
+    echo -e "\033[0;32m[SHELL]\033[0m installing plugins (${w_plugin} )"
+    sed -i "/^plugins=/c\plugins=(${w_plugin} )${Fix_Completion}" "${Zsh_rc}"
+fi
 
 # set shell
 while ! chsh -s $(which zsh); do
@@ -81,19 +81,19 @@ while ! chsh -s $(which zsh); do
 done
 
 # .zsh & .p10k.zsh
-cp -r "${scrDir***REMOVED***/../setups/.zshrc" "${HOME***REMOVED***"
-cp -r "${scrDir***REMOVED***/../setups/.p10k.zsh" "${HOME***REMOVED***"
+cp -r "${scrDir}/../setups/.zshrc" "${HOME}"
+cp -r "${scrDir}/../setups/.p10k.zsh" "${HOME}"
 
 # kwalletrc
-if [ ! -d "~/.con***REMOVED***g/kwalletrc" ]; then
-   cp -r "${scrDir***REMOVED***/../setups/.con***REMOVED***g/kwalletrc" "${HOME***REMOVED***/.con***REMOVED***g"
-***REMOVED***
+if [ ! -d "~/.config/kwalletrc" ]; then
+   cp -r "${scrDir}/../setups/.config/kwalletrc" "${HOME}/.config"
+fi
 
 # modprobe
 if [ ! -d "/etc/modprobe.d/blacklist.conf" ]; then
    sudo touch /etc/modprobe.d/blacklist.conf 
    sudo echo -e '\n install nouveau /bin/true\n blacklist iTCO_wdt\n blacklist joydev\n blacklist mac_hid' | sudo tee -a /etc/modprobe.d/blacklist.conf 
-***REMOVED***
+fi
 
 # Nvidia
 if grep -qE '^MODULES=.*nvidia. *nvidia_modeset.*nvidia_uvm.*nvidia_drm' /etc/mkinitcpio.conf; then
@@ -103,7 +103,7 @@ else
  echo "Nvidia modules added in /etc/mkinitcpio.conf"
 
  sudo mkinitcpio -P 
-***REMOVED***
+fi
 
 if [ $(lspci -k | grep -A 2 -E "(VGA|3D)" | grep -i nvidia | wc -l) -gt 0 ]; then
     if [ $(grep 'MODULES=' /etc/mkinitcpio.conf | grep nvidia | wc -l) -eq 0 ]; then
@@ -111,31 +111,31 @@ if [ $(lspci -k | grep -A 2 -E "(VGA|3D)" | grep -i nvidia | wc -l) -gt 0 ]; the
         sudo mkinitcpio -P
         if [ $(grep 'options nvidia-drm modeset=1' /etc/modprobe.d/nvidia.conf | wc -l) -eq 0 ]; then
             echo 'options nvidia-drm modeset=1' | sudo tee -a /etc/modprobe.d/nvidia.conf
-    ***REMOVED***
-***REMOVED***
-***REMOVED***
+        fi
+    fi
+fi
 
 # GRUB
 if ! sudo grep -i "nvidia-drm.modeset=1" /etc/default/grub; then
    sudo sed -i 's|^GRUB_CMDLINE_LINUX_DEFAULT=".*"|GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=0 nvidia-drm.modeset=1 nvidia_drm.fbdev=1 rd.systemd.show_status=false nowatchdog mitigations=off"|' /etc/default/grub
    echo "modify /etc/default/grub"
-   sudo grub-mkcon***REMOVED***g -o /boot/grub/grub.cfg
-***REMOVED***
+   sudo grub-mkconfig -o /boot/grub/grub.cfg
+fi
 
 # Network Manager
 if ! sudo grep -i "dns=none" /etc/NetworkManager/NetworkManager.conf; then
    sudo echo -e '\n [main]\n dns=none\n systemd-resolved=false' | sudo tee -a /etc/NetworkManager/NetworkManager.conf
-***REMOVED***
+fi
 
 # Resolv DNS
 if ! sudo grep -i "nameserver 1.1.1.1" /etc/resolv.conf; then
    sudo echo -e '\n options timeout:1\n options single-request\n \n nameserver 1.1.1.1\n nameserver 1.0.0.1\n nameserver 8.8.8.8' | sudo tee -a /etc/resolv.conf
    sudo chattr +i /etc/resolv.conf
-***REMOVED***
+fi
 
-GET_GLXINFO=$(glxinfo | grep "direct rendering" | awk '{print $3***REMOVED***')
+GET_GLXINFO=$(glxinfo | grep "direct rendering" | awk '{print $3}')
 if echo "$GET_GLXINFO" -eq "Yes";then
-    sudo pacman -S mesa-utils --nocon***REMOVED***rm
-***REMOVED***
+    sudo pacman -S mesa-utils --noconfirm
+fi
 
-echo 'vm.swappiness = 60' | sudo tee -a /etc/sysctl.d/99-swappiness.confPATH-TO-YOUR-FILE-WITH-SENSITIVE-DATA
+echo 'vm.swappiness = 60' | sudo tee -a /etc/sysctl.d/99-swappiness.conf

@@ -25,26 +25,26 @@ check_internet_connection(){
         exit 1
     else
         echo -ne "- Connected.\n"
-***REMOVED***
-***REMOVED***
+    fi
+}
 
 pre_setup(){
 
     pacman-key -v archlinux-version-x86_64.iso.sig
 
-    iso=$(curl -4 ifcon***REMOVED***g.co/country-iso)
+    iso=$(curl -4 ifconfig.co/country-iso)
     timedatectl set-ntp true
 
     pacman -Sy 
-    pacman -S --nocon***REMOVED***rm archlinux-keyring wget
-    pacman -S --nocon***REMOVED***rm --needed pacman-contrib
+    pacman -S --noconfirm archlinux-keyring wget
+    pacman -S --noconfirm --needed pacman-contrib
 
     sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
-    pacman -S --nocon***REMOVED***rm --needed reflector rsync grub
+    pacman -S --noconfirm --needed reflector rsync grub
     cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
     reflector -a 48 -c $iso -f 5 -l 20 --sort rate --save /etc/pacman.d/mirrorlist
     mkdir /mnt &>/dev/null 
-***REMOVED***
+}
 
 diskpart_setup(){
     
@@ -52,12 +52,12 @@ diskpart_setup(){
     while IFS= read -r line; do
         list_disk+=("$line")
     
-***REMOVED*** < <(lsblk -d -o NAME,SIZE,TYPE,MODEL,MOUNTPOINT | grep -v '^$')
+    done < <(lsblk -d -o NAME,SIZE,TYPE,MODEL,MOUNTPOINT | grep -v '^$')
 
-    if [ ${#list_disk[@]***REMOVED*** -eq 0 ]; then
+    if [ ${#list_disk[@]} -eq 0 ]; then
         echo "Disk Not Found!"
         exit 1
-***REMOVED***
+    fi
 
     selected=1
     quit=false
@@ -69,13 +69,13 @@ diskpart_setup(){
         echo "#########################################################"
         echo ""
     
-        for i in "${!list_disk[@]***REMOVED***"; do
+        for i in "${!list_disk[@]}"; do
             if [ $i -eq $selected ]; then
-                echo "> ${list_disk[$i]***REMOVED***"
-    ***REMOVED***
-                echo "  ${list_disk[$i]***REMOVED***"
-***REMOVED***
-***REMOVED***
+                echo "> ${list_disk[$i]}"
+            else
+                echo "  ${list_disk[$i]}"
+            fi
+        done
 
         read -rsn1 key
         case "$key" in
@@ -85,14 +85,14 @@ diskpart_setup(){
                     '[A') 
                         selected=$((selected - 1))
                         if [ $selected -lt 0 ]; then
-                            selected=$((${#list_disk[@]***REMOVED*** - 1))
-            ***REMOVED***
+                            selected=$((${#list_disk[@]} - 1))
+                        fi
                         ;;
                     '[B') 
                         selected=$((selected + 1))
-                        if [ $selected -ge ${#list_disk[@]***REMOVED*** ]; then
+                        if [ $selected -ge ${#list_disk[@]} ]; then
                             selected=0
-            ***REMOVED***
+                        fi
                         ;;
                 esac
                 ;;
@@ -103,23 +103,23 @@ diskpart_setup(){
                 exit 0
                 ;;
         esac
-***REMOVED***
+    done
 
-    SELECTED_DISK=$(echo "${list_disk[$selected]***REMOVED***" | awk '{print $1***REMOVED***')
+    SELECTED_DISK=$(echo "${list_disk[$selected]}" | awk '{print $1}')
 
     TARGET_DISK="/dev/$SELECTED_DISK"
 
     if $SELECTED_DISK | grep -i "nvme" > /dev/null;then
         
-        GET_SECTOR_SIZE=$(nvme id-ns -H $TARGET_DISK | grep "Relative Performance" | awk '{print $1 $2 $3 $12***REMOVED***' | grep '4096')
+        GET_SECTOR_SIZE=$(nvme id-ns -H $TARGET_DISK | grep "Relative Performance" | awk '{print $1 $2 $3 $12}' | grep '4096')
 
         if GET_SECTOR_SIZE $> /dev/null;then
 
             nvme format --lbaf=$GET_LBA_FORMAT $TARGET_DISK
         
-    ***REMOVED***
+        fi
 
-***REMOVED*** 
+    fi 
 
     if $SELECTED_DISK | grep -i "sd" > /dev/null;then
         
@@ -129,29 +129,29 @@ diskpart_setup(){
 
             hdparm --set-sector-size 4096 --please-destroy-my-drive $TARGET_DISK
         
-    ***REMOVED***
+        fi
 
-***REMOVED*** 
+    fi 
 
-    MEM_SIZE=$(awk '/MemTotal/ {print $2***REMOVED***' /proc/meminfo | numfmt --from-unit=K --to=si --suf***REMOVED***x=B --format="%.2f" | awk '{printf "%d\n", $1***REMOVED***')
+    MEM_SIZE=$(awk '/MemTotal/ {print $2}' /proc/meminfo | numfmt --from-unit=K --to=si --suffix=B --format="%.2f" | awk '{printf "%d\n", $1}')
 
     if [ "$MEM_SIZE" -gt 8 ]; then
-        SWAP_SIZE=$(awk '/MemTotal/ {print $2***REMOVED***' /proc/meminfo  | numfmt --from-unit=K --to=si --suf***REMOVED***x=B --format="%.2f" | awk '{printf $1 * 1.5***REMOVED***' |awk '{printf "%dGB\n", $1***REMOVED***')
+        SWAP_SIZE=$(awk '/MemTotal/ {print $2}' /proc/meminfo  | numfmt --from-unit=K --to=si --suffix=B --format="%.2f" | awk '{printf $1 * 1.5}' |awk '{printf "%dGB\n", $1}')
     else
         SWAP_SIZE="8GB"
-***REMOVED***
+    fi
     
     echo "Swap SIZE [Auto Setup Used]: $SWAP_SIZE"
 
-    DISK_SIZE=$(lsblk -d -o NAME,SIZE | grep $SELECTED_DISK | awk '{printf $2***REMOVED***' | awk '{printf "%d\n", $1***REMOVED***')
-    echo "Total Disk Size: ${DISK_SIZE***REMOVED***GB"
+    DISK_SIZE=$(lsblk -d -o NAME,SIZE | grep $SELECTED_DISK | awk '{printf $2}' | awk '{printf "%d\n", $1}')
+    echo "Total Disk Size: ${DISK_SIZE}GB"
     
     read -p "Do you want used auto setup root partition based 50% capacity of the disk? [(y) Disk Size must be more then 256GB] (y/n): " response
 
     if [[ "$response" =~ ^[Yy]$|^[Yy][Ee][Ss]$ ]] && [ "$DISK_SIZE" -gt 256 ]; then
         
         GET_SIZE=$((("$DISK_SIZE" - 1) / 2))
-        ROOT_SIZE=$((GET_SIZE -"${SWAP_SIZE%GB***REMOVED***"))"GB"
+        ROOT_SIZE=$((GET_SIZE -"${SWAP_SIZE%GB}"))"GB"
 
 
         echo "ROOT SIZE [Auto Setup Used]: $ROOT_SIZE"
@@ -169,7 +169,7 @@ t
 n
 2
 
-+${SWAP_SIZE***REMOVED***
++${SWAP_SIZE}
 t
 2
 19
@@ -177,7 +177,7 @@ t
 n
 3
 
-+${ROOT_SIZE***REMOVED***
++${ROOT_SIZE}
 t
 3
 20
@@ -198,7 +198,7 @@ t
 n
 2
 
-+${SWAP_SIZE***REMOVED***
++${SWAP_SIZE}
 t
 2
 19
@@ -213,28 +213,28 @@ t
 w
 EOF
 
-***REMOVED***
+    fi
     
     echo "Partitioning Successfully!"
-***REMOVED***
+}
 
 format_partition(){
     echo "Start formatting partitions..."
 
-    # mkfs.fat -F32 "${TARGET_DISK***REMOVED***${BOOT_PART***REMOVED***"
-    # mkfs.ext4 "${TARGET_DISK***REMOVED***${ROOT_PART***REMOVED***" 
-    mkfs.fat -F32 -S 4096 "${TARGET_DISK***REMOVED***${BOOT_PART***REMOVED***"
-    mkfs.ext4 -b 4096 "${TARGET_DISK***REMOVED***${ROOT_PART***REMOVED***" 
+    # mkfs.fat -F32 "${TARGET_DISK}${BOOT_PART}"
+    # mkfs.ext4 "${TARGET_DISK}${ROOT_PART}" 
+    mkfs.fat -F32 -S 4096 "${TARGET_DISK}${BOOT_PART}"
+    mkfs.ext4 -b 4096 "${TARGET_DISK}${ROOT_PART}" 
 
-    mkswap "${TARGET_DISK***REMOVED***${SWAP_PART***REMOVED***"
-    swapon "${TARGET_DISK***REMOVED***${SWAP_PART***REMOVED***"
+    mkswap "${TARGET_DISK}${SWAP_PART}"
+    swapon "${TARGET_DISK}${SWAP_PART}"
 
-    mount "${TARGET_DISK***REMOVED***${ROOT_PART***REMOVED***" /mnt
+    mount "${TARGET_DISK}${ROOT_PART}" /mnt
     mkdir -p /mnt/boot
-    mount "${TARGET_DISK***REMOVED***${BOOT_PART***REMOVED***" /mnt/boot
+    mount "${TARGET_DISK}${BOOT_PART}" /mnt/boot
 
     echo "Finished formatting partitions."
-***REMOVED***
+}
 
 inputed(){
 
@@ -249,7 +249,7 @@ inputed(){
     read -p "Hostname : " gethostnm
     HOSTNAME=$gethostnm
 
-***REMOVED***
+}
 
 install_base(){
     echo "Start Installing base system..."
@@ -259,12 +259,12 @@ install_base(){
         GET_UCODE="intel-ucode"
     elif echo "$get_cpu_model" | grep -i "amd" > /dev/null; then
         GET_UCODE="amd-ucode"
-***REMOVED***
+    fi
 
-    pacstrap -K /mnt base base-devel linux-zen linux-zen-headers linux-***REMOVED***rmware "$GET_UCODE" networkmanager wireless_tools wpa_supplicant sof-***REMOVED***rmware dosfstools ntfs-3g mtools util-linux exfatprogs e2fsprogs sudo nano man-db man-pages texinfo wget curl git grub e***REMOVED***bootmgr os-prober --nocon***REMOVED***rm --needed
+    pacstrap -K /mnt base base-devel linux-zen linux-zen-headers linux-firmware "$GET_UCODE" networkmanager wireless_tools wpa_supplicant sof-firmware dosfstools ntfs-3g mtools util-linux exfatprogs e2fsprogs sudo nano man-db man-pages texinfo wget curl git grub efibootmgr os-prober --noconfirm --needed
 
     echo "Finished Installing base system."
-***REMOVED***
+}
 
 generate_fstab(){
     echo "Start Generating fstab..."
@@ -275,10 +275,10 @@ generate_fstab(){
 
     echo "Finished Generating fstab."
 
-***REMOVED***
+}
 
 arch_chroot(){
-    echo "Start Con***REMOVED***guring system..."
+    echo "Start Configuring system..."
 
     cat > /mnt/chroot_script.sh << EOF
 TARGET_DISK="$TARGET_DISK"
@@ -317,8 +317,8 @@ cat > /etc/hosts << HOSTS_EOF
 HOSTS_EOF
 
 mount "\$TARGET_DISK\$BOOT_PART" /boot
-grub-install --target=x86_64-e***REMOVED*** --e***REMOVED***-directory=/boot --bootloader-id=GRUB
-grub-mkcon***REMOVED***g -o /boot/grub/grub.cfg
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+grub-mkconfig -o /boot/grub/grub.cfg
 
 systemctl enable --now NetworkManager
 
@@ -330,8 +330,8 @@ EOF
     arch-chroot /mnt /chroot_script.sh
     rm /mnt/chroot_script.sh
 
-    echo "Finished Con***REMOVED***guring system."
-***REMOVED***
+    echo "Finished Configuring system."
+}
 
 result_installation(){
     
@@ -351,7 +351,7 @@ result_installation(){
     #                 Timezone: $TIMEZONE                     #
     ###########################################################
     "
-***REMOVED***
+}
 
 main(){
     
@@ -370,7 +370,6 @@ main(){
     result_installation
 
     echo "Finished Arch Linux installation."
-***REMOVED***
+}
 
 main "$@"
-PATH-TO-YOUR-FILE-WITH-SENSITIVE-DATA

@@ -9,22 +9,22 @@ if ! ping -c 5 google.com &> /dev/null; then
     echo -ne "- exit\n"
     
     exit 1
-***REMOVED***
+fi
 
 check_pkg_i(){
-    if pacman -Qi "${1***REMOVED***" &>/dev/null; then
+    if pacman -Qi "${1}" &>/dev/null; then
         return 0
     else 
         return 1
-***REMOVED***
-***REMOVED***
+    fi
+}
 
 hypr_base=(
     aquamarine                          # a very light linux rendering backend library
     kitty                               # A modern, hackable, featureful, OpenGL-based terminal emulator
     hyprland                            # a highly customizable dynamic tiling Wayland compositor
     hyprutils                           # Hyprland utilities library used across the ecosystem
-    hyprlang                            # implementation library for the hypr con***REMOVED***g language
+    hyprlang                            # implementation library for the hypr config language
     xdg-desktop-portal-hyprland         # xdg-desktop-portal backend for hyprland
     hyprwire                            # A fast and consistent wire protocol for IPC
     libastal-hyprland-git               # Library and cli tool for Hyprland IPC sockets
@@ -36,9 +36,9 @@ hypr_base=(
     hyprgraphics                        # hyprland graphics resources and utilities
     xdg-desktop-portal-gtk              # A backend implementation for xdg-desktop-portal using GTK
     qt6-wayland                         # Provides APIs for Wayland
-    qt6ct-kde                           # Qt 6 Con***REMOVED***guration Utility, patched to work correctly with KDE applications
+    qt6ct-kde                           # Qt 6 Configuration Utility, patched to work correctly with KDE applications
     hyprqt6engine                       # QT6 Theme Provider for Hyprland
-    kvantum                             # SVG-based theme engine for Qt6 (including con***REMOVED***g tool and extra themes)
+    kvantum                             # SVG-based theme engine for Qt6 (including config tool and extra themes)
     gtk3                                # GObject-based multi-platform GUI toolkit
     gtk4                                # GObject-based multi-platform GUI toolkit
     egl-wayland                         # EGLStream-based Wayland external platform
@@ -51,40 +51,40 @@ hypr_base=(
 )
 
 printf "\n%s - Start Install Hyprland dependencies \n"
-for PKG in "${hypr_base[@]***REMOVED***"; do
+for PKG in "${hypr_base[@]}"; do
     if ! check_pkg_i "$PKG";then
         printf "\n%s - Start Install "$PKG" \n"
         if pacman -Ss "$PKG" &> /dev/null; then 
-            sudo pacman -S --nocon***REMOVED***rm "$PKG" 
+            sudo pacman -S --noconfirm "$PKG" 
         elif yay -Ss "$PKG" &> /dev/null; then 
-            yay -S --nocon***REMOVED***rm "$PKG" 
-***REMOVED*** 
+            yay -S --noconfirm "$PKG" 
+        else 
             printf "\n%s - Package "$PKG" is not found!. \n"
-    ***REMOVED***
+        fi
         printf "\n%s - Finished Install "$PKG" \n"
     else
          printf "\n%s - "$PKG" already exist. \n"
-***REMOVED***
+    fi
 done
 
 hypr_util=(
     sddm                                # QML based X11 and Wayland display manager
     uwsm                                # A standalone Wayland session manager
     quickshell                          # Flexible toolkit for making desktop shells with QtQuick
-    dunst                               # Customizable and lightweight noti***REMOVED***cation-daemon
-    libnotify                           # Library for sending desktop noti***REMOVED***cations    
+    dunst                               # Customizable and lightweight notification-daemon
+    libnotify                           # Library for sending desktop notifications    
     hyprcursor                          # The hyprland cursor format, library and utilities
     hyprpaper                           # a blazing fast wayland wallpaper utility with IPC controls
-    ro***REMOVED***                                # A window switcher, application launcher and dmenu replacement    
+    rofi                                # A window switcher, application launcher and dmenu replacement    
     hyprlock                            # hyprland’s GPU-accelerated screen locking utility
     wlogout                             # Logout menu for wayland
     hyprtoolkit                         # A modern C++ Wayland-native GUI toolkit
     hyprpolkitagent                     # Simple polkit authentication agent for Hyprland, written in QT/QML
-    hyprsunset                          # An application to enable a blue-light ***REMOVED***lter on Hyprland 
+    hyprsunset                          # An application to enable a blue-light filter on Hyprland 
     hyprpicker                          # A wlroots-compatible Wayland color picker that does not suck
     hyprshot                            # Hyprland screenshot utility
     hyprpwcenter                        # A GUI Pipewire control center
-    hyprshade                           # Hyprland shade con***REMOVED***guration tool
+    hyprshade                           # Hyprland shade configuration tool
     hyprsome-git
     noto-fonts
     noto-fonts-cjk
@@ -103,11 +103,11 @@ hypr_util=(
     ddcutil                             # Query and change Linux monitor settings using DDC/CI and USB.
     playerctl                           # mpris media player controller and lib for spotify, vlc, audacious, bmp, xmms2, and others.
     matugen                             # A material you color generation tool
-    adw-gtk-theme                       # Unof***REMOVED***cial GTK 3 port of the libadwaita theme
+    adw-gtk-theme                       # Unofficial GTK 3 port of the libadwaita theme
     breeze                              # Artwork, styles and assets for the Breeze visual style for the Plasma Desktop
     cliphist                            # wayland clipboard manager
     wl-clipboard                        # Command-line copy/paste utilities for Wayland
-    kwallet                             # Secure and uni***REMOVED***ed container for user passwords
+    kwallet                             # Secure and unified container for user passwords
     glibc                               # GNU C Library
     gzip                                # GNU compression utility
     preload                             # Makes applications run faster by prefetching binaries and shared objects
@@ -124,23 +124,23 @@ hypr_util=(
 )
 
 printf "\n%s - Start Install Hyprland utilites \n"
-for PKG in "${hypr_util[@]***REMOVED***"; do
+for PKG in "${hypr_util[@]}"; do
     if ! check_pkg_i "$PKG";then
         printf "\n%s - Start Install "$PKG" \n"
         if pacman -Ss "$PKG" &> /dev/null; then 
-            sudo pacman -S --nocon***REMOVED***rm "$PKG" 
+            sudo pacman -S --noconfirm "$PKG" 
         elif yay -Ss "$PKG" &> /dev/null; then 
-            yay -S --nocon***REMOVED***rm "$PKG" 
-***REMOVED*** 
+            yay -S --noconfirm "$PKG" 
+        else 
             printf "\n%s - Package "$PKG" is not found!. \n"
-    ***REMOVED***
+        fi
         printf "\n%s - Finished Install "$PKG" \n"
     else
          printf "\n%s - "$PKG" already exist. \n"
-***REMOVED***
+    fi
 done
 
-GET_VGA=$(lspci | grep -i "vga" | awk '{print $5***REMOVED***')
+GET_VGA=$(lspci | grep -i "vga" | awk '{print $5}')
 
 if echo "$GET_VGA" | grep -i "intel";then
     intel_dep=(
@@ -156,10 +156,10 @@ if echo "$GET_VGA" | grep -i "intel";then
         libvpl 
         vpl-gpu-rt   
     )
-    for INTEL in "linux-zen-headers" "${intel_dep[@]***REMOVED***"; do
-        sudo pacman -S --nocon***REMOVED***rm "$INTEL"
-***REMOVED***
-***REMOVED***
+    for INTEL in "linux-zen-headers" "${intel_dep[@]}"; do
+        sudo pacman -S --noconfirm "$INTEL"
+    done
+fi
 
 if echo "$GET_VGA" | grep -i "nvidia";then
     nvidia_dep=(
@@ -168,30 +168,30 @@ if echo "$GET_VGA" | grep -i "nvidia";then
         nvidia-settings
         libva                        
         libva-nvidia-driver-git
-        nvidia-xcon***REMOVED***g
+        nvidia-xconfig
     )
 
-    for NVIDIA in "linux-zen-headers" "${nvidia_dep[@]***REMOVED***"; do
-        sudo pacman -S --nocon***REMOVED***rm "$NVIDIA"
-***REMOVED***
-***REMOVED***
+    for NVIDIA in "linux-zen-headers" "${nvidia_dep[@]}"; do
+        sudo pacman -S --noconfirm "$NVIDIA"
+    done
+fi
 
 
 printf "\n%s - Start Install Extra dependencies \n"
-for PKG in "${extra_dep[@]***REMOVED***"; do
+for PKG in "${extra_dep[@]}"; do
     if ! check_pkg_i "$PKG";then
         printf "\n%s - Start Install "$PKG" \n"
         if pacman -Ss "$PKG" &> /dev/null; then 
-            sudo pacman -S --nocon***REMOVED***rm "$PKG" 
+            sudo pacman -S --noconfirm "$PKG" 
         elif yay -Ss "$PKG" &> /dev/null; then 
-            yay -S --nocon***REMOVED***rm "$PKG" 
-***REMOVED*** 
+            yay -S --noconfirm "$PKG" 
+        else 
             printf "\n%s - Package "$PKG" is not found!. \n"
-    ***REMOVED***
+        fi
         printf "\n%s - Finished Install "$PKG" \n"
     else
          printf "\n%s - "$PKG" already exist. \n"
-***REMOVED***
+    fi
 done
 
 
@@ -216,20 +216,20 @@ hypr_driver_dep=(
 )
 
 printf "\n%s - Start Install Hyprland driver dependencies \n"
-for PKG in "${hypr_driver_dep[@]***REMOVED***"; do
+for PKG in "${hypr_driver_dep[@]}"; do
     if ! check_pkg_i "$PKG";then
         printf "\n%s - Start Install "$PKG" \n"
         if pacman -Ss "$PKG" &> /dev/null; then 
-            sudo pacman -S --nocon***REMOVED***rm "$PKG" 
+            sudo pacman -S --noconfirm "$PKG" 
         elif yay -Ss "$PKG" &> /dev/null; then 
-            yay -S --nocon***REMOVED***rm "$PKG" 
-***REMOVED*** 
+            yay -S --noconfirm "$PKG" 
+        else 
             printf "\n%s - Package "$PKG" is not found!. \n"
-    ***REMOVED***
+        fi
         printf "\n%s - Finished Install "$PKG" \n"
     else
          printf "\n%s - "$PKG" already exist. \n"
-***REMOVED***
+    fi
 done
 
 extra_dep=(
@@ -251,20 +251,18 @@ extra_dep=(
 )
 
 printf "\n%s - Start Install Extra dependencies \n"
-for PKG in "${extra_dep[@]***REMOVED***"; do
+for PKG in "${extra_dep[@]}"; do
     if ! check_pkg_i "$PKG";then
         printf "\n%s - Start Install "$PKG" \n"
         if pacman -Ss "$PKG" &> /dev/null; then 
-            sudo pacman -S --nocon***REMOVED***rm "$PKG" 
+            sudo pacman -S --noconfirm "$PKG" 
         elif yay -Ss "$PKG" &> /dev/null; then 
-            yay -S --nocon***REMOVED***rm "$PKG" 
-***REMOVED*** 
+            yay -S --noconfirm "$PKG" 
+        else 
             printf "\n%s - Package "$PKG" is not found!. \n"
-    ***REMOVED***
+        fi
         printf "\n%s - Finished Install "$PKG" \n"
     else
          printf "\n%s - "$PKG" already exist. \n"
-***REMOVED***
+    fi
 done
-
-PATH-TO-YOUR-FILE-WITH-SENSITIVE-DATA

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 if ! cat /etc/pacman.conf | grep -i "openrc-eudev"; then
     echo -e "[openrc-eudev]\nSigLevel=PackageOptional\nServer=http://downloads.sourceforge.net/project/archopenrc/\$repo/\$arch" >> /etc/pacman.conf
-***REMOVED***
+fi
 
 systemctl list-units --state=running "*.service" > daemons.list
 
@@ -11,4 +11,4 @@ pacman -Sw sysvinit openrc-core eudev eudev-openrc eudev-systemdcompat dbus-nosy
 
 pacman -Rdd systemd libsystemd
 
-pacman -S sysvinit openrc-core eudev eudev-openrc eudev-systemdcompatPATH-TO-YOUR-FILE-WITH-SENSITIVE-DATA
+pacman -S sysvinit openrc-core eudev eudev-openrc eudev-systemdcompat

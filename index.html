@@ -11,15 +11,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/components/prism-bash.min.js"></script>
     
     <script>
-        // Load and display .sh ***REMOVED***le
+        // Load and display .sh file
         fetch('archInstall.sh')
             .then(response => response.text())
             .then(data => {
                 document.getElementById('script-content').innerHTML = 
-                    `<pre><code class="language-bash">${data***REMOVED***</code></pre>`;
+                    `<pre><code class="language-bash">${data}</code></pre>`;
                 Prism.highlightAll(); // Apply syntax highlighting
-            ***REMOVED***)
-            .catch(error => console.error('Error loading ***REMOVED***le:', error));
+            })
+            .catch(error => console.error('Error loading file:', error));
     </script>
 </body>
-</html>PATH-TO-YOUR-FILE-WITH-SENSITIVE-DATA
+</html>

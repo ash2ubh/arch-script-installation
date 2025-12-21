@@ -11,23 +11,23 @@ if ! ping -c 5 archlinux.org  &> /dev/null; then
     exit 1
 else
     echo -ne "- Connected.\n"
-***REMOVED***
+fi
 
 check_pkg_i(){
-    if pacman -Qi "${1***REMOVED***" &>/dev/null; then
+    if pacman -Qi "${1}" &>/dev/null; then
         return 0
     else 
         return 1
-***REMOVED***
-***REMOVED***
+    fi
+}
 
 check_svc(){
-    if [[ $(systemctl list-units --all -t service --full --no-legend "${1***REMOVED***.service" | sed 's/^\s*//g' | cut -f1 -d' ') == "${1***REMOVED***.service" ]]; then
+    if [[ $(systemctl list-units --all -t service --full --no-legend "${1}.service" | sed 's/^\s*//g' | cut -f1 -d' ') == "${1}.service" ]]; then
         return 0
     else
         return 1
-***REMOVED*** 
-***REMOVED***
+    fi 
+}
 
 sddm_themes=(
     sddm-astronaut-theme
@@ -37,18 +37,18 @@ sddm_themes=(
 )
 
 printf "\n%s - Start Install Hyprland dependencies \n"
-for PKG in "${sddm_themes[@]***REMOVED***"; do
+for PKG in "${sddm_themes[@]}"; do
     if ! check_pkg_i "$PKG";then
         printf "\n%s - Start Install "$PKG" \n"
         if pacman -Ss "$PKG" &> /dev/null; then 
-            sudo pacman -S --nocon***REMOVED***rm "$PKG" 
+            sudo pacman -S --noconfirm "$PKG" 
         elif yay -Ss "$PKG" &> /dev/null; then 
-            yay -S --nocon***REMOVED***rm "$PKG" 
-***REMOVED*** 
+            yay -S --noconfirm "$PKG" 
+        else 
             printf "\n%s - Package "$PKG" is not found!. \n"
-    ***REMOVED***
+        fi
         printf "\n%s - Finished Install "$PKG" \n"
-***REMOVED***
+    fi
 done
 
 applications=(
@@ -71,32 +71,31 @@ applications=(
 )
 
 printf "\n%s - Start Install Applications \n"
-for PKG in "${applications[@]***REMOVED***"; do
+for PKG in "${applications[@]}"; do
     if ! check_pkg_i "$PKG";then
         printf "\n%s - Start Install "$PKG" \n"
         if pacman -Ss "$PKG" &> /dev/null; then 
-            sudo pacman -S --nocon***REMOVED***rm "$PKG" 
+            sudo pacman -S --noconfirm "$PKG" 
         elif yay -Ss "$PKG" &> /dev/null; then 
-            yay -S --nocon***REMOVED***rm "$PKG" 
-***REMOVED*** 
+            yay -S --noconfirm "$PKG" 
+        else 
             printf "\n%s - Package "$PKG" is not found!. \n"
-    ***REMOVED***
+        fi
         printf "\n%s - Finished Install "$PKG" \n"
-***REMOVED***
+    fi
 done
 
 svc_lst=(
     sddm
 )
 
-for servChk in "${svc_lst[@]***REMOVED***"; do
-    if check_svc ${servChk***REMOVED***; then
-        printf "\n%s - ${servChk***REMOVED*** service system is Already Active \n"
+for servChk in "${svc_lst[@]}"; do
+    if check_svc ${servChk}; then
+        printf "\n%s - ${servChk} service system is Already Active \n"
     else
-        printf "\n%s - Start ${servChk***REMOVED*** service system... \n"
-        sudo systemctl enable "${servChk***REMOVED***.service"
-        sudo systemctl start "${servChk***REMOVED***.service"
-        printf "\n%s - ${servChk***REMOVED*** service system is Active ... \n"
-***REMOVED***
+        printf "\n%s - Start ${servChk} service system... \n"
+        sudo systemctl enable "${servChk}.service"
+        sudo systemctl start "${servChk}.service"
+        printf "\n%s - ${servChk} service system is Active ... \n"
+    fi
 done
-PATH-TO-YOUR-FILE-WITH-SENSITIVE-DATA
