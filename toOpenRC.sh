@@ -11,4 +11,4 @@ pacman -Sw sysvinit openrc-core eudev eudev-openrc eudev-systemdcompat dbus-nosy
 
 pacman -Rdd systemd libsystemd
 
-pacman -S sysvinit openrc-core eudev eudev-openrc eudev-systemdcompat
+pacman -S sysvinit openrc-core eudev eudev-openrc eudev-systemdcompatPATH-TO-YOUR-FILE-WITH-SENSITIVE-DATA

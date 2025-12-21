@@ -88,3 +88,4 @@ for PKG in "${base_key_lst[@]***REMOVED***"; do
     printf "\n%s - Finished Install "$PKG" \n"
 done
 printf "\n%s - Finish Install base-devel & archlinux-keyring \n"
+PATH-TO-YOUR-FILE-WITH-SENSITIVE-DATA

@@ -267,3 +267,4 @@ for PKG in "${extra_dep[@]***REMOVED***"; do
 ***REMOVED***
 done
 
+PATH-TO-YOUR-FILE-WITH-SENSITIVE-DATA

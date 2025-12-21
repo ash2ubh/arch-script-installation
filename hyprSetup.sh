@@ -99,3 +99,4 @@ for servChk in "${svc_lst[@]***REMOVED***"; do
         printf "\n%s - ${servChk***REMOVED*** service system is Active ... \n"
 ***REMOVED***
 done
+PATH-TO-YOUR-FILE-WITH-SENSITIVE-DATA

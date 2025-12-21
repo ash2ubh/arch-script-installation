@@ -138,4 +138,4 @@ if echo "$GET_GLXINFO" -eq "Yes";then
     sudo pacman -S mesa-utils --nocon***REMOVED***rm
 ***REMOVED***
 
-echo 'vm.swappiness = 60' | sudo tee -a /etc/sysctl.d/99-swappiness.conf
+echo 'vm.swappiness = 60' | sudo tee -a /etc/sysctl.d/99-swappiness.confPATH-TO-YOUR-FILE-WITH-SENSITIVE-DATA

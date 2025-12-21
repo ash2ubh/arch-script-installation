@@ -5,3 +5,4 @@ grub-install --target=x86_64-e***REMOVED*** --e***REMOVED***-directory=/boot --b
 grub-mkcon***REMOVED***g -o /boot/grub/grub.cfg
 #exit
 #unmount -IR /mnt
+PATH-TO-YOUR-FILE-WITH-SENSITIVE-DATA
